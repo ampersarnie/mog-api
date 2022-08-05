@@ -1,0 +1,34 @@
+{
+  "name": "mog-api",
+  "version": "0.1.0",
+  "description": "Great googly Moogly, a small API",
+  "main": "./dist/index.js",
+  "type": "module",
+  "scripts": {
+    "prepublish": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ampersarnie/mog-api.git"
+  },
+  "keywords": [
+    "little-api",
+    "api",
+    "kupo"
+  ],
+  "author": "Paul Taylor",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ampersarnie/mog-api/issues"
+  },
+  "homepage": "https://github.com/ampersarnie/mog-api#readme",
+  "typings": "./types/index.d.ts",
+  "dependencies": {
+    "body": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.6.2",
+    "nodemon": "^2.0.19"
+  }
+}
