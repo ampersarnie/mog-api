@@ -1,79 +1,81 @@
-import jsonBody from 'body/json.js';
+import jsonBody from 'body/json';
 
 enum Methods {
-    GET = 'GET',
-    POST = 'POST',
+	GET = 'GET',
+	POST = 'POST',
 }
 
 type CallbackFunction = {
-    (
-        body:object, 
-        request: any
-    ): any,
-}
+	(body: object, request: any): any;
+};
 
 type Response = {
-    headers?: object,
-    code?: number,
-    body: any
-}
+	headers?: object;
+	code?: number;
+	body: any;
+};
 
 class Routes {
-    requestListener = null;
+	requestListener = null;
 
-    res = null;
-    req = null;
+	res = null;
 
-    constructor(req, res) {
-        this.res = res;
-        this.req = req;
-    }
+	req = null;
 
-    route(method: keyof typeof Methods, path:RegExp, fn:CallbackFunction) : void {
-        if(method !== this.req.method) {
-            return;
-        }
+	constructor(req, res) {
+		this.res = res;
+		this.req = req;
+	}
 
-        switch(method) {
-            case 'POST':
-                this.post(path, fn);
-                break;
-            case 'GET':
-            default:
-                this.get(path, fn);
-                break;
-        }
-    }
+	route(
+		method: keyof typeof Methods,
+		path: RegExp,
+		fn: CallbackFunction,
+	): void {
+		if (method !== this.req.method) {
+			return;
+		}
 
-    post(path:RegExp, fn:CallbackFunction) : void {
-        if(!path.exec(this.req.url)) {
-            return;
-        }
+		switch (method) {
+			case 'POST':
+				this.post(path, fn);
+				break;
+			case 'GET':
+			default:
+				this.get(path, fn);
+				break;
+		}
+	}
 
-        jsonBody(this.req, this.res, (err, body) => {
-            const response = fn(body, this.req);
+	post(path: RegExp, fn: CallbackFunction): void {
+		if (!path.exec(this.req.url)) {
+			return;
+		}
 
-            this.handleResponse(response);
-        });
-    }
+		jsonBody(this.req, this.res, (err, body) => {
+			const response = fn(body, this.req);
 
-    async get(path:RegExp, fn:CallbackFunction) {
-        if(!path.exec(this.req.url)) {
-            return;
-        }
+			this.handleResponse(response);
+		});
+	}
 
-        const response = await fn({}, this.req);
+	async get(path: RegExp, fn: CallbackFunction) {
+		if (!path.exec(this.req.url)) {
+			return;
+		}
 
-        this.handleResponse(response);
-    }
+		const response = await fn({}, this.req);
 
-    handleResponse(response:Response) {
-        Promise.resolve(response).then(() => {
-            this.res.setHeader('Content-Type', 'application/json');
-            this.res.writeHead(response.code ? response.code : 200);
-            this.res.end(JSON.stringify(response.body ? response.body : {}));
-        });
-    }
+		this.handleResponse(response);
+	}
+
+	handleResponse(response: Response) {
+		Promise.resolve(response).then(() => {
+			this.res.setHeader('Content-Type', 'application/json');
+			this.res.writeHead(response.code ? response.code : 200);
+			this.res.end(JSON.stringify(response.body ? response.body : {}));
+		});
+	}
 }
 
 export default Routes;

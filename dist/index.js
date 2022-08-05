@@ -1,2 +1,2 @@
-import API from "./api.js";
+import API from './api.js';
 export default API;

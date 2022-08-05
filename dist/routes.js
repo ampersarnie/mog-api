@@ -1,4 +1,4 @@
-import jsonBody from 'body/json.js';
+import jsonBody from 'body/json';
 var Methods;
 (function (Methods) {
     Methods["GET"] = "GET";
