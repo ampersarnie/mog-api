@@ -17,7 +17,6 @@ type Response = {
     code?: number,
     body: any
 }
-
 class Routes {
     requestListener = null;
 
@@ -29,7 +28,7 @@ class Routes {
         this.req = req;
     }
 
-    route(method:Methods, path:RegExp, fn:CallbackFunction) : void {
+    route(method: keyof typeof Methods, path:RegExp, fn:CallbackFunction) : void {
         if(method !== this.req.method) {
             return;
         }

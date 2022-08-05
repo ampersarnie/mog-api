@@ -1,6 +1,10 @@
 import * as http from 'http';
 import Routes from './routes.js';
 
+type RequestListener = {
+    (Router: Routes): void;
+}
+
 class API {
     host:string = 'localhost';
 
@@ -11,7 +15,7 @@ class API {
         this.port = port;
     }
 
-    serve(requestListener) {
+    serve(requestListener:RequestListener) {
         const server = http.createServer((req, res) => {
             console.log('listener');
             const Routing = new Routes(req, res);

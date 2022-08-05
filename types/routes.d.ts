@@ -15,7 +15,7 @@ declare class Routes {
     res: any;
     req: any;
     constructor(req: any, res: any);
-    route(method: Methods, path: RegExp, fn: CallbackFunction): void;
+    route(method: keyof typeof Methods, path: RegExp, fn: CallbackFunction): void;
     post(path: RegExp, fn: CallbackFunction): void;
     get(path: RegExp, fn: CallbackFunction): Promise<void>;
     handleResponse(response: Response): void;
