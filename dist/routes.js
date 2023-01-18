@@ -1,4 +1,5 @@
-import jsonBody from 'body/json';
+// eslint-disable-next-line import/extensions
+import jsonBody from 'body/json.js';
 var Methods;
 (function (Methods) {
     Methods["GET"] = "GET";
@@ -12,21 +13,27 @@ class Routes {
         this.res = res;
         this.req = req;
     }
+    isMethod(method) {
+        return method !== this.req.method;
+    }
     route(method, path, fn) {
-        if (method !== this.req.method) {
+        if (this.isMethod(method)) {
             return;
         }
         switch (method) {
-            case 'POST':
+            case Methods.POST:
                 this.post(path, fn);
                 break;
-            case 'GET':
+            case Methods.GET:
             default:
                 this.get(path, fn);
                 break;
         }
     }
     post(path, fn) {
+        if (this.isMethod(Methods.POST)) {
+            return;
+        }
         if (!path.exec(this.req.url)) {
             return;
         }
@@ -36,6 +43,9 @@ class Routes {
         });
     }
     async get(path, fn) {
+        if (this.isMethod(Methods.GET)) {
+            return;
+        }
         if (!path.exec(this.req.url)) {
             return;
         }

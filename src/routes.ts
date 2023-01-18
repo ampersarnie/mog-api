@@ -1,4 +1,5 @@
-import jsonBody from 'body/json';
+// eslint-disable-next-line import/extensions
+import jsonBody from 'body/json.js';
 
 enum Methods {
 	GET = 'GET',
@@ -27,20 +28,24 @@ class Routes {
 		this.req = req;
 	}
 
+	isMethod(method: keyof typeof Methods) {
+		return method !== this.req.method;
+	}
+
 	route(
 		method: keyof typeof Methods,
 		path: RegExp,
 		fn: CallbackFunction,
 	): void {
-		if (method !== this.req.method) {
+		if (this.isMethod(method)) {
 			return;
 		}
 
 		switch (method) {
-			case 'POST':
+			case Methods.POST:
 				this.post(path, fn);
 				break;
-			case 'GET':
+			case Methods.GET:
 			default:
 				this.get(path, fn);
 				break;
@@ -48,11 +53,15 @@ class Routes {
 	}
 
 	post(path: RegExp, fn: CallbackFunction): void {
+		if (this.isMethod(Methods.POST)) {
+			return;
+		}
+
 		if (!path.exec(this.req.url)) {
 			return;
 		}
 
-		jsonBody(this.req, this.res, (err, body) => {
+		jsonBody(this.req, this.res, (err, body: object) => {
 			const response = fn(body, this.req);
 
 			this.handleResponse(response);
@@ -60,6 +69,10 @@ class Routes {
 	}
 
 	async get(path: RegExp, fn: CallbackFunction) {
+		if (this.isMethod(Methods.GET)) {
+			return;
+		}
+
 		if (!path.exec(this.req.url)) {
 			return;
 		}
